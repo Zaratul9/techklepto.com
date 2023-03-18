@@ -1,4 +1,4 @@
-module webapptest
+module techklepto.dev
 
 go 1.19
 
