@@ -1,0 +1,548 @@
+{{define "wip"}}
+
+<style>
+  :root {
+    --font-color: 200, 200, 200;
+    --highlight-color: 3, 169, 244;
+    --body-color: 20, 30, 40;
+
+    --theme-background: 38, 38, 38;
+    --theme-primary: 185, 43, 39;
+  }
+
+  #desktop {
+    height: 100vh;
+  }
+
+  body {
+    background-color: rgb(var(--body-color));
+    margin: 0px;
+  }
+
+  body::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background-color: rgb(var(--theme-background));
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  h1,
+  h2,
+  h3,
+  input,
+  select,
+  button,
+  span,
+  a,
+  p {
+    color: rgb(var(--font-color));
+    font-family: "Rubik", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0px;
+  }
+
+  .highlight {
+    color: rgb(var(--highlight-color));
+  }
+
+  .fancy-scrollbar::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  .fancy-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .fancy-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    height: 0px;
+    width: 0px;
+  }
+
+  #phone {
+    background-color: rgb(var(--theme-background));
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
+    height: 851px;
+    width: 393px;
+    margin: 100px auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #main-wrapper {
+    height: 100%;
+    background-color: rgb(var(--theme-background));
+    overflow: auto;
+  }
+
+  #main[data-nav="active"] > #nav-wrapper {
+    transform: translateX(0%);
+  }
+
+  #main[data-nav="inactive"] > #nav-wrapper {
+    transform: translateX(-100%);
+  }
+
+  #main[data-nav="active"] > #content-wrapper {
+    margin-left: 3.5rem;
+  }
+
+  #main[data-nav="inactive"] > #content-wrapper {
+    margin-left: 0rem;
+  }
+
+  #top-wrapper {
+    width: calc(100% - 0.25rem);
+    display: flex;
+    background-color: rgb(20 20 20);
+    gap: 0.25rem;
+    margin: 0.25rem;
+    margin-left: 0rem;
+    margin-top: 0rem;
+    padding: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+  }
+
+  #top-wrapper > .nav-toggle {
+    --button-color: white;
+    width: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+
+  #top-wrapper > .nav-toggle:hover,
+  #top-wrapper > .nav-toggle:focus {
+    background-color: rgba(255 255 255 / 5%);
+  }
+
+  #top-wrapper > .nav-toggle > i {
+    font-size: 1.5rem;
+  }
+
+  #top-wrapper > .nav-toggle .hamburger {
+    transition: translate 1s, rotate 1s;
+  }
+
+  #top-wrapper > .nav-toggle[aria-expanded="true"] .hamburger {
+    translate: 2px -1px;
+    rotate: 0.125turn;
+  }
+
+  #top-wrapper > .nav-toggle .line {
+    transition: 1s;
+    stroke-dasharray: 60 31 60 300;
+  }
+
+  #top-wrapper > .nav-toggle[aria-expanded="true"] .line {
+    stroke-dasharray: 60 102 60 300;
+    stroke-dashoffset: -90;
+  }
+
+  #top-wrapper > .top {
+    width: calc(100% - 6rem);
+    display: flex;
+    justify-content: center;
+    border-radius: 0.25rem;
+    padding: 0rem 0.25rem;
+    position: relative;
+  }
+
+  #top-wrapper > .top > .logo-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    outline: none;
+  }
+
+  #top-wrapper > .top > .logo-link:hover,
+  #top-wrapper > .top > .logo-link:focus {
+    background-color: rgba(255 255 255 / 5%);
+  }
+
+  #top-wrapper > .top > .logo-link > .logo {
+    height: 1.5rem;
+    object-fit: cover;
+  }
+
+  #top-wrapper,
+  #nav-wrapper {
+    position: fixed;
+    top: 0px;
+  }
+
+  #nav-wrapper {
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding-left: 0rem;
+    padding-top: 3.25rem;
+    transition: transform 250ms;
+  }
+
+  #nav-wrapper > .nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgb(20 20 20);
+    gap: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+
+  #nav-wrapper > .nav > .nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.25rem;
+  }
+
+  #nav-wrapper > .nav .nav-link {
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 0.25rem;
+    outline: none;
+    text-decoration: none;
+  }
+
+  #nav-wrapper > .nav .nav-link:hover,
+  #nav-wrapper > .nav .nav-link:focus {
+    background-color: rgba(255 255 255 / 5%);
+  }
+
+  #nav-wrapper > .nav .nav-link.active > i {
+    color: rgb(var(--theme-primary));
+  }
+
+  #nav-wrapper > .nav .nav-link > i {
+    color: rgb(var(--font-color));
+    font-size: 1.5rem;
+  }
+
+  #nav-wrapper > .nav .nav-link.profile > img {
+    height: 2rem;
+    border-radius: 2rem;
+    object-fit: cover;
+  }
+
+  #content-wrapper {
+    padding-top: 3.25rem;
+    padding-bottom: 0.25rem;
+    transition: margin-left 250ms;
+  }
+
+  #content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0rem 0.25rem;
+  }
+
+  #content > .section {
+    display: flex;
+    gap: 0.5rem;
+    background-color: rgb(20 20 20);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  #content > .post-section {
+    cursor: pointer;
+  }
+
+  #content > .post-section > img {
+    height: 2rem;
+    border-radius: 2rem;
+    object-fit: cover;
+  }
+
+  #content > .post-section > input {
+    background-color: rgba(255 255 255 / 5%);
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    padding: 0rem 1rem;
+    border-radius: 2rem;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  #content > .action-section > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-grow: 1;
+    background-color: rgba(255 255 255 / 5%);
+    color: rgb(var(--font-color));
+    padding: 0.5rem;
+    border: none;
+    outline: none;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  #content > .action-section > button:hover,
+  #content > .action-section > button:focus {
+    background-color: rgba(255 255 255 / 10%);
+  }
+
+  #content > .action-section > button > i {
+    font-size: 1.2rem;
+  }
+
+  #content > .action-section > button > span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  #content > .feed {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  #content > .feed > .post {
+    height: calc(100vh - 3.25rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background-color: rgb(20 20 20);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+
+  #content > .feed > .post > .profile {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  #content > .feed > .post > .profile > img {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 2rem;
+    object-fit: cover;
+  }
+
+  #content > .feed > .post > .profile > .profile-info > .name {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  #content > .feed > .post > .profile > .profile-info > .role {
+    font-size: 0.7rem;
+  }
+
+  #content > .feed > .post > .title {
+    font-weight: 500;
+    color: rgb(var(--font-color));
+  }
+
+  #content > .feed > .post > .desc {
+    font-size: 0.8rem;
+    color: rgb(180 180 180);
+  }
+
+  #content > .feed > .post > img {
+    width: 100%;
+    height: calc(100vh - 9.5rem);
+    border-radius: 0.25rem;
+    object-fit: cover;
+  }
+
+  @media (max-width: 500px) {
+    body {
+      overflow: auto;
+    }
+
+    #phone {
+      height: 100vh;
+      display: flex;
+      width: 100%;
+      margin: 0px auto;
+    }
+
+    #main-wrapper {
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    #top-wrapper,
+    #nav-wrapper {
+      position: fixed;
+      top: 0px;
+    }
+
+    #nav-wrapper {
+      padding-top: 3.25rem;
+    }
+  }
+</style>
+
+<div id="desktop">
+  <div id="main-wrapper" class="fancy-scrollbar">
+    <div id="main" data-nav="active">
+      <div id="top-wrapper">
+        <button
+          class="nav-toggle"
+          aria-controls="primary-navigation"
+          aria-expanded="true"
+          type="button"
+          onclick="toggleNav()"
+        >
+          <svg
+            stroke="var(--button-color)"
+            fill="none"
+            class="hamburger"
+            viewBox="-10 -10 120 120"
+            width="35"
+          >
+            <path
+              class="line"
+              stroke-width="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m 20 40 h 60 a 1 1 0 0 1 0 20 h -60 a 1 1 0 0 1 0 -40 h 30 v 70"
+            ></path>
+          </svg>
+        </button>
+        <div class="top">
+          <a class="logo-link" href="#"> t3chkl3pt0 </a>
+        </div>
+      </div>
+      <div id="nav-wrapper">
+        <div class="nav">
+          <div class="nav-group">
+            <a class="nav-link active" href="#">
+              <svg
+                stroke="white"
+                fill="white"
+                class="homeButton"
+                viewBox="0 0 100 100"
+              >
+                <path
+                  class="line"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m 20 40 a 0 0 0 0 0 30 -20 a 0 0 0 0 0 30 20 h -5 v 40 h -15 v -15 a 1 1 0 0 0 -20 0 v 15 h -15 v -40 z"
+                ></path>
+              </svg>
+            </a>
+            <a class="nav-link" href="#">
+              <i class="fa-regular fa-compass"></i>
+            </a>
+            <a class="nav-link" href="#">
+              <i class="fa-regular fa-magnifying-glass"></i>
+            </a>
+            <a class="nav-link" href="#">
+              <i class="fa-solid fa-plus"></i>
+            </a>
+          </div>
+          <div class="nav-group">
+            <a class="nav-link language" href="#">
+              <i class="fa-light fa-globe"></i>
+            </a>
+            <a class="nav-link" href="#">
+              <i class="fa-solid fa-bell"></i>
+            </a>
+            <a class="nav-link profile" href="#">
+              <img
+                src="https://assets.codepen.io/1468070/Hyperplexed+Logo.png"
+                alt=""
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="content-wrapper">
+        <div id="content">
+          <div class="feed">
+            <div class="post">
+              <h1 class="title">Welcome to my awesome website</h1>
+              <h3 class="desc">Things are still under development</h3>
+            </div>
+
+            <div class="post">
+              <div class="profile">
+                <img
+                  src="https://images.unsplash.com/photo-1553675559-5046b59a5ca5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80"
+                />
+                <div class="profile-info">
+                  <h3 class="name">t3chkl3pto</h3>
+                  <h3 class="role">· Mar 22</h3>
+                </div>
+              </div>
+              <h3 class="title">Have a turtle!!</h3>
+              <h3 class="desc">Why?! Because I can!!</h3>
+              <img
+                src="https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1528&q=80"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const navButton = document.querySelector(".nav-toggle");
+
+  navButton.addEventListener("click", () => {
+    const isOpened = navButton.getAttribute("aria-expanded");
+    if (isOpened === "false") {
+      navButton.setAttribute("aria-expanded", "true");
+    } else {
+      navButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  const mainWrapper = document.getElementById("main-wrapper"),
+    main = document.getElementById("main");
+
+  const toggleNav = () => {
+    const active = mainWrapper.scrollTop === 0 ? "active" : "fixed";
+
+    main.dataset.nav = main.dataset.nav === active ? "inactive" : active;
+  };
+
+  mainWrapper.onscroll = (e) => {
+    if (main.dataset.nav !== "inactive") {
+      main.dataset.nav = "inactive";
+      navButton.setAttribute("aria-expanded", "false");
+    }
+  };
+</script>
+{{end}}

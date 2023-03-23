@@ -35,7 +35,7 @@ func imageTrack(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
+	homeView = views.NewView("wip", "views/WIP.gohtml")
 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
 	imageTrackView = views.NewView("bootstrap", "views/imageTrack.gohtml")
 
